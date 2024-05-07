@@ -1,0 +1,69 @@
+openapi: 3.0.3
+info:
+  title: OpenAPI Code Provider Service
+  description: |-
+    Product code generation service
+  contact:
+    name: Nzuguem Fruit Stock Management
+    url: https://github.com/nzuguem
+    email: nzuguemkevine@gmail.com
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+paths:
+  /codes/{productName}:
+    get:
+      summary: Get code of Product
+      description: Get code of Product
+      operationId: getCodeByProductName
+      parameters:
+        - name: productName
+          in: path
+          description: Name of Product
+          required: true
+          schema:
+            type: string
+          examples:
+            apple:
+              value: Apple
+            kiwi:
+              value: Kiwi
+            test:
+              value: Test
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCode'
+              examples:
+                apple:
+                  value:
+                    name: Apple
+                    code: APLE
+                kiwi:
+                  value:
+                    name: Kiwi
+                    code: KW
+                test:
+                  value:
+                    name: Test
+                    code: TEST
+        '400':
+          description: Invalid ProductName supplied
+        '404':
+          description: Product Not Found
+components:
+  schemas:
+    ProductCode:
+      type: object
+      required:
+        - name
+        - code
+      properties:
+        name:
+          type: string
+        code:
+          type: string

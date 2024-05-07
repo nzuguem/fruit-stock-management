@@ -1,0 +1,17 @@
+services:
+
+  stock-db:
+    image: postgres:15.6-alpine
+    container_name: stock-db
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: stock
+      POSTGRES_PASSWORD: stock
+      POSTGRES_DB: stock
+    # Using Flyway instead of mount volumes
+    #volumes:
+    #  - ./db/init:/docker-entrypoint-initdb.d
+    labels:
+      # https://docs.spring.io/spring-boot/reference/features/dev-services.html#features.dev-services.docker-compose.custom-images
+      org.springframework.boot.service-connection: postgres

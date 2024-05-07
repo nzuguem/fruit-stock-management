@@ -1,0 +1,13 @@
+services:
+  code-provider-api:
+    container_name: code-provider-api
+    image: wiremock/wiremock
+    ports:
+      - 3001:8585
+    command:
+      - --port=8585
+      - --verbose
+      - --disable-banner
+    volumes:
+      - ./wiremock/stubs:/home/wiremock/__files
+      - ./wiremock/mappings:/home/wiremock/mappings

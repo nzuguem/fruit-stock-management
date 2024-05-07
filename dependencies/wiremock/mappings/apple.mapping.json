@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/codes/Apple"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "apple.code.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

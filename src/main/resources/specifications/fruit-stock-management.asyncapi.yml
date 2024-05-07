@@ -1,0 +1,69 @@
+asyncapi: 3.0.0
+info:
+  title: AsyncAPI Fruit Stock Management
+  version: 1.0.0
+  description: Fruit Stock Management Service
+  contact:
+    name: Nzuguem Fruit Stock Management
+    url: https://github.com/nzuguem
+    email: nzuguemkevine@gmail.com
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+channels:
+  fruits-provisioning:
+    messages:
+      FruitQuantityEvent:
+        $ref: '#/components/messages/FruitQuantityEvent'
+  fruits-sold-out:
+    messages:
+      FruitQuantityEvent:
+        $ref: '#/components/messages/FruitQuantityEvent'
+operations:
+  sendFruitQuantityEvent:
+    action: send
+    channel:
+      $ref: '#/channels/fruits-provisioning'
+    messages:
+      - $ref: '#/channels/fruits-provisioning/messages/FruitQuantityEvent'
+  receiveFruitQuantityEvent:
+    action: receive
+    channel:
+      $ref: '#/channels/fruits-sold-out'
+    messages:
+      - $ref: '#/channels/fruits-sold-out/messages/FruitQuantityEvent'
+components:
+  messages:
+    FruitQuantityEvent:
+      payload:
+        type: object
+        required:
+          - timestamp
+          - fruitQuantity
+        properties:
+          timestamp:
+            type: integer
+            format: int64
+          fruitQuantity:
+            $ref: '#/components/schemas/FruitQuantity'
+      examples:
+        # Make sure that these objects are persisted in the BDD so that the Kafka Consumer does not fail.
+        # src/test/resources/db/migrations/afterMigrate.sql
+        - name: kiwi
+          payload:
+            timestamp: 1711430656
+            fruitQuantity:
+              code: KW
+              quantity: 100
+  schemas:
+    FruitQuantity:
+      payload:
+        type: object
+        required:
+          - code
+          - quantity
+        properties:
+          code:
+            type: string
+          quantity:
+            type: integer

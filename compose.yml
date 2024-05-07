@@ -1,0 +1,30 @@
+include:
+  - path: dependencies/compose.postgresql.yml
+  - path: dependencies/compose.kafka.yml
+  - path: dependencies/compose.code-provider.yml
+  - path: dependencies/compose.mailpit.yml
+
+services:
+  app:
+    container_name: fruit-stock-management
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      # JDBC Datasource
+      SPRING_DATASOURCE_URL: jdbc:postgresql://stock-db:5432/stock
+      SPRING_DATASOURCE_USERNAME: stock
+      SPRING_DATASOURCE_PASSWORD: stock
+
+      # Kafka
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+
+      # Code Provider
+      APPLICATION_CLIENTS_CODE_PROVIDER_URL: http://code-provider-api:8585
+
+      # SMTP
+      SPRING_MAIL_HOST: mailpit
+      SPRING_MAIL_PORT: 1025

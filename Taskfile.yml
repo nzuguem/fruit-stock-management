@@ -1,0 +1,154 @@
+version: 3
+
+# Global Properties
+silent: true
+
+tasks:
+  default:
+    desc: List Tasks.
+    cmd: task -l
+
+  doctor:
+    desc: Verify that the development workstation has all the tools needed to contribute to the project.
+    cmds:
+      # Verify Docker
+      - docker version &> /dev/null && echo "✅ Docker" || echo "❌ Docker"
+      # Verify Docker Compose
+      - (docker-compose version &> /dev/null || docker compose version &> /dev/null) && echo "✅ Docker Compose" || echo "❌ Docker Compose"
+      # Verify Docker Buildx
+      - docker buildx version &> /dev/null && echo "✅ Docker Buildx" || echo "❌ Docker Buildx"
+      # Verify curl
+      - curl -V  &> /dev/null  && echo "✅ Curl" || echo "❌ Curl"
+      # Verify Kcat
+      - kcat -V &> /dev/null && echo "✅ Kcat" || echo "❌ Kcat"
+      # Verify Git
+      - git --version &> /dev/null && echo "✅ Git" || echo "❌ Git"
+
+  run-with-compose:
+    desc: Launch application in Compose.
+    cmds: 
+      - task: build-app
+      - docker compose up -d --build --wait
+  
+  log-compose-services:
+    desc: Show logs of all Compose Services.
+    cmd: docker compose logs -f
+  
+  log-compose-services/*:
+    desc: Show logs of one Compose Service.
+    vars:
+      SERVICE_NAME: '{{index .MATCH 0}}'
+    cmd: docker compose logs {{.SERVICE_NAME}} -f
+  
+  stop-with-compose:
+    desc: Launch application in Compose.
+    cmd: docker compose down
+
+  run-with-compose-devservices:
+    desc: Launch application in Compose DevServices mode.
+    cmd: ./mvnw spring-boot:run
+
+  run-with-testcontainers-devservices:
+    desc: Launch application in TestContainers DevServices mode.
+    cmd: ./mvnw spring-boot:test-run -Dspring-boot.run.arguments=--spring.docker.compose.enabled=false
+
+  tests:
+    desc: Run all Tests.
+    cmd: ./mvnw test
+
+  build-app:
+    desc: Build Application.
+    cmd: ./mvnw package -DskipTests
+
+  build-docker-image:
+    desc: Build Docker image.
+    cmds: 
+      - task: build-app
+      - docker buildx build -t fruits-stock-management .
+
+  provide-fruit-quantity:
+    desc: Provision of fruit. For more details, Run task --summary provide-fruit-quantity.
+    summary: |
+      Examples:
+      - Add new Fruit : task PAYLOAD=apple.new.json provide-fruit-quantity
+      - Update Quantity of Existing Fruit : task PAYLOAD=apple.update.json provide-fruit-quantity
+    requires: # Make sure these variables are set before running
+      vars:
+        - PAYLOAD
+    cmd: 'curl -X POST http://localhost:8080/fruits -H "Content-Type: application/json" -d @./payloads/{{.PAYLOAD}}'
+
+  sold-out-fruit-quantity:
+    internal: true
+    requires:
+      vars:
+        - PAYLOAD
+        - KAFKA_PORT
+    vars:
+      KAFKA_HOST_PORT:
+        sh: './tools/get-kafka-exposed-port.sh {{.KAFKA_PORT}}'
+    cmd: 'kcat -P -b localhost:{{.KAFKA_HOST_PORT}} -t fruits-sold-out ./payloads/{{.PAYLOAD}}'
+
+  sold-out-fruit-quantity/compose:
+    desc: Sold out a certain quantity of fruit. Docker Compose
+    cmds:
+      - task: sold-out-fruit-quantity
+        vars:
+          KAFKA_PORT: 9092
+
+  sold-out-fruit-quantity/tc:
+    desc: Sold out a certain quantity of fruit. Test Containers
+    cmds:
+      - task: sold-out-fruit-quantity
+        vars:
+          KAFKA_PORT: 9093
+
+  consume-provision-fruit-quantity:
+    internal: true
+    requires:
+      vars:
+        - KAFKA_PORT
+    vars:
+      KAFKA_HOST_PORT:
+        sh: './tools/get-kafka-exposed-port.sh {{.KAFKA_PORT}}'
+    cmd: 'kcat -C -b localhost:{{.KAFKA_HOST_PORT}} -t fruits-provisioning'
+
+  consume-provision-fruit-quantity/compose:
+    desc: Consume Provision. Docker Compose
+    cmds:
+      - task: consume-provision-fruit-quantity
+        vars:
+          KAFKA_PORT: 9092
+
+  consume-provision-fruit-quantity/tc:
+    desc: Consume Provision. Test Containers
+    cmds:
+      - task: consume-provision-fruit-quantity
+        vars:
+          KAFKA_PORT: 9093
+
+  start-dependency-track:
+    desc: Start Dependency Track.
+    cmds:
+      - docker compose -f compose.dtrack.yml up --wait
+      - echo "admin/admin"
+      - echo "Visit http://localhost:8282"
+
+  stop-dependency-track:
+    desc: Stop Dependency Track.
+    cmd: docker compose -f compose.dtrack.yml stop
+
+  upload-sbom-on-dependency-track:
+    desc: Upload SBOM on Dependency Track.
+    requires:
+      vars:
+        - DTRACK_API_KEY
+    cmds:
+      - >
+        curl -X "POST" http://localhost:8181/api/v1/bom 
+        -H "Content-Type: multipart/form-data"
+        -H "X-Api-Key: {{.DTRACK_API_KEY}}"
+        -F "autoCreate=true"
+        -F "projectName=fruit-stock-management"
+        -F "projectVersion=local"
+        -F "bom=@target/classes/META-INF/sbom/application.cdx.json"
+
