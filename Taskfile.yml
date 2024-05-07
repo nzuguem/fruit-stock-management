@@ -58,7 +58,7 @@ tasks:
 
   build-app:
     desc: Build Application.
-    cmd: ./mvnw package
+    cmd: ./mvnw $MAVEN_CLI_OPTS package
 
   build-docker-image:
     desc: Build Docker image.
