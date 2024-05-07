@@ -61,6 +61,10 @@ jobs:
     needs: 
       - build
     if: ${{ success() }}
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
