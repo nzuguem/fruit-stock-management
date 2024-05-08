@@ -5,10 +5,6 @@ on:
     branches:
       - main
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   build:
     name: 🏗️ Build Application
@@ -58,6 +54,9 @@ jobs:
   conatiner-image:
     name: 🏭 Build Container Image
     runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
     needs: 
       - build
     if: ${{ success() }}
@@ -103,9 +102,13 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          cache-to: type=inline
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:build-cache
+          # This cache storage backend is not supported with the default "docker" BuildX driver
+          # https://docs.docker.com/build/drivers/
+          # The buildX setup creates and uses a builder based on the “docker-container” driver (https://docs.docker.com/build/drivers/docker-container/). 
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:build-cache,mode=max
       
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
