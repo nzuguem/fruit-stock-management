@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.*;
 import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
 
 @TestConfiguration(proxyBeanMethods = false)
 public class ContainersConfiguration {
@@ -106,6 +107,12 @@ public class ContainersConfiguration {
                 //.withSecondaryArtifacts("order-service-postman-collection.json", "third-parties/apipastries-postman-collection.json")
                 .withAsyncDependsOn(this.kafkaContainer);   // We need this to be sure Kafka will be up before Microcks async minion
 
+        ensemble.getMicrocksContainer()
+                .withCopyFileToContainer(
+                        MountableFile.forHostPath("./microcks/config"),
+                        "/deployments/config"  
+                );
+        
         // We need to replace the default endpoints with those provided by Microcks.
         registry.add("application.clients.code-provider.url",
                 () -> ensemble.getMicrocksContainer().getRestMockEndpoint("OpenAPI Code Provider Service", "1.0.0"));

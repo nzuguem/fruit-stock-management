@@ -102,16 +102,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.cloudevents</groupId>
-			<artifactId>cloudevents-kafka</artifactId>
-			<version>2.5.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.cloudevents</groupId>
-			<artifactId>cloudevents-json-jackson</artifactId>
-			<version>2.5.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
@@ -123,24 +113,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+		<!-- Metrics displayed by Micrometer in Prometheus format -->
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
+		<!-- Metrics sent to a storage backend that supports the OTLP protocol, or sent to OTEL Col -->
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-otlp</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.opentelemetry</groupId>
-			<artifactId>opentelemetry-exporter-otlp</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.opentelemetry.instrumentation</groupId>
-			<artifactId>opentelemetry-logback-appender-1.0</artifactId>
-			<version>2.3.0-alpha</version>
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
@@ -186,6 +167,22 @@
 			<plugin>
 				<groupId>org.cyclonedx</groupId>
             	<artifactId>cyclonedx-maven-plugin</artifactId>
+				<configuration>
+					<projectType>application</projectType>
+					<schemaVersion>1.5</schemaVersion>
+					<includeBomSerialNumber>true</includeBomSerialNumber>
+					<includeCompileScope>true</includeCompileScope>
+					<includeProvidedScope>true</includeProvidedScope>
+					<includeRuntimeScope>true</includeRuntimeScope>
+					<includeSystemScope>true</includeSystemScope>
+					<includeTestScope>true</includeTestScope>
+					<includeLicenseText>true</includeLicenseText>
+					<outputReactorProjects>true</outputReactorProjects>
+					<outputFormat>json</outputFormat>
+					<outputName>sbom</outputName>
+					<outputDirectory>${project.build.directory}</outputDirectory>
+					<verbose>false</verbose>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

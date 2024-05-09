@@ -36,19 +36,20 @@ jobs:
             -Dstyle.color=always 
         run: |
           task build-app
+    
+      - name: Scan SBOM
+        uses: anchore/scan-action@v3
+        with:
+          sbom: target/sbom.json
+          fail-build: false
+          output-format: table
+          by-cve: true
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: fruit-stock-management
           path: target/fruit-stock-management-*.jar
-          retention-days: 30
-      
-      - name: Upload Artifact SBOM
-        uses: actions/upload-artifact@v4
-        with:
-          name: fruit-stock-management-sbom
-          path: target/classes/META-INF/sbom/application.cdx.json 
           retention-days: 30
   
   conatiner-image:

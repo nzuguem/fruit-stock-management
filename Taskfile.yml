@@ -23,6 +23,10 @@ tasks:
       - kcat -V &> /dev/null && echo "✅ Kcat" || echo "❌ Kcat"
       # Verify Git
       - git --version &> /dev/null && echo "✅ Git" || echo "❌ Git"
+      # Verify Ollama
+      - ollama -v &> /dev/null && echo "✅ Ollama" || echo "⚠️  Ollama"
+      # Verify Grype
+      - grype version &> /dev/null && echo "✅ Grype" || echo "⚠️  Grype"
 
   run-with-compose:
     desc: Launch application in Compose.
@@ -59,6 +63,10 @@ tasks:
   build-app:
     desc: Build Application.
     cmd: ./mvnw $MAVEN_CLI_OPTS package
+  
+  scan-sbom:
+    desc: Scan SBOM.
+    cmd: grype sbom:./target/sbom.json --by-cve -o table
 
   build-docker-image:
     desc: Build Docker image.
@@ -150,5 +158,5 @@ tasks:
         -F "autoCreate=true"
         -F "projectName=fruit-stock-management"
         -F "projectVersion=local"
-        -F "bom=@target/classes/META-INF/sbom/application.cdx.json"
+        -F "bom=@target/sbom.sjon"
 
