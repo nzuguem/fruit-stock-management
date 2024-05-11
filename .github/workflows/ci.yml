@@ -23,19 +23,9 @@ jobs:
           java-version: '22'
           cache: maven
       
-      - name: Build Application
-        env:
-          MAVEN_CLI_OPTS: >-
-            --no-transfer-progress 
-            --errors 
-            --fail-at-end
-            --show-version 
-            --batch-mode
-          MAVEN_OPTS: >-
-            -Djansi.force=true
-            -Dstyle.color=always 
+      - name: Build Application          
         run: |
-          task build-app
+          task build-app/ci
     
       - name: Scan SBOM
         uses: anchore/scan-action@v3
