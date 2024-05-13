@@ -40,8 +40,6 @@ public class FruitStockController {
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleException(Exception ex, WebRequest request) {
         
-        System.out.println("Test");
-
         return switch (ex) {
             case FruitQuantityNotFoundException _ -> ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getLocalizedMessage());
             default -> ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage());
