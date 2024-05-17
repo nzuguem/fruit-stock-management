@@ -95,7 +95,7 @@ public class ContainersConfiguration {
     MicrocksContainersEnsemble microcksEnsemble(DynamicPropertyRegistry registry) {
 
 
-        var ensemble = new MicrocksContainersEnsemble(NETWORK, "quay.io/microcks/microcks-uber:1.9.0")
+        var ensemble = new MicrocksContainersEnsemble(NETWORK, "quay.io/microcks/microcks-uber:1.9.0-native")
                 .withPostman()             // We need this to do contract-testing with Postman collection
                 .withAsyncFeature()        // We need this for async mocking and contract-testing
                 .withAccessToHost(true)   // We need this to access our webapp while it runs

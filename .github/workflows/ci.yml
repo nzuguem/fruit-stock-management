@@ -96,9 +96,9 @@ jobs:
           annotations: ${{ steps.meta.outputs.annotations }}
           platforms: linux/amd64,linux/arm64
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:build-cache
-          # This cache storage backend is not supported with the default "docker" BuildX driver
+          # This "cache-to" expression is not supported with the default "docker" BuildX driver
           # https://docs.docker.com/build/drivers/
-          # The buildX setup creates and uses a builder based on the “docker-container” driver (https://docs.docker.com/build/drivers/docker-container/). 
+          # The "Set up Docker Buildx" creates and uses a builder based on the “docker-container” driver (https://docs.docker.com/build/drivers/docker-container/). 
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:build-cache,mode=max
       
       - name: Generate artifact attestation
