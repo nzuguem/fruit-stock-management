@@ -28,3 +28,8 @@ services:
       # SMTP
       SPRING_MAIL_HOST: mailpit
       SPRING_MAIL_PORT: 1025
+
+      # Logging
+      # The OTel agent will intercept log events and inject “trace_id, span_id, trace_flags” attributes into the MDC (Mapped Diagnostic Contexts)
+      # See https://github.com/open-telemetry/opentelemetry-java-instrumentation/blob/main/docs/logger-mdc-instrumentation.md
+      LOGGING_PATTERN_LEVEL: trace_id=%X{trace_id} span_id=%X{span_id} trace_flags=%X{trace_flags} %5p 

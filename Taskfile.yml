@@ -30,8 +30,9 @@ tasks:
 
   run-with-compose:
     desc: Launch application in Compose.
-    cmds: 
+    deps:
       - task: build-app
+    cmds: 
       - docker compose up -d --build --wait
   
   log-compose-services:
@@ -88,9 +89,9 @@ tasks:
 
   build-docker-image:
     desc: Build Docker image.
-    cmds: 
+    deps:
       - task: build-app
-      - docker buildx build -t fruits-stock-management .
+    cmd: docker buildx build -t fruits-stock-management .
 
   provide-fruit-quantity:
     desc: Provision of fruit. For more details, Run task --summary provide-fruit-quantity.
