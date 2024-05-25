@@ -70,7 +70,7 @@ tasks:
   
   build-app/ci:
     desc: Build Application for Continuous Integration.
-    cmds:
+    deps:
       - task: build-app
         vars:      
           MAVEN_CLI_OPTS: >-
@@ -85,7 +85,7 @@ tasks:
   
   scan-sbom:
     desc: Scan SBOM.
-    cmd: grype sbom:./target/sbom.json --by-cve -o table
+    cmd: grype sbom:./target/classes/META-INF/sbom/application.cdx.json --by-cve -o table
 
   build-docker-image:
     desc: Build Docker image.
@@ -117,14 +117,14 @@ tasks:
 
   sold-out-fruit-quantity/compose:
     desc: Sold out a certain quantity of fruit. Docker Compose
-    cmds:
+    deps:
       - task: sold-out-fruit-quantity
         vars:
           KAFKA_PORT: 9092
 
   sold-out-fruit-quantity/tc:
     desc: Sold out a certain quantity of fruit. Test Containers
-    cmds:
+    deps:
       - task: sold-out-fruit-quantity
         vars:
           KAFKA_PORT: 9093
@@ -141,14 +141,14 @@ tasks:
 
   consume-provision-fruit-quantity/compose:
     desc: Consume Provision. Docker Compose
-    cmds:
+    deps:
       - task: consume-provision-fruit-quantity
         vars:
           KAFKA_PORT: 9092
 
   consume-provision-fruit-quantity/tc:
     desc: Consume Provision. Test Containers
-    cmds:
+    deps:
       - task: consume-provision-fruit-quantity
         vars:
           KAFKA_PORT: 9093
@@ -177,5 +177,5 @@ tasks:
         -F "autoCreate=true"
         -F "projectName=fruit-stock-management"
         -F "projectVersion=local"
-        -F "bom=@target/sbom.sjon"
+        -F "bom=@target/classes/META-INF/sbom/application.cdx.json"
 

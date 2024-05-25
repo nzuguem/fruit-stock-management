@@ -9,6 +9,7 @@ COPY --exclude=**/** --exclude=!$JAR_FILE \
 
 # https://docs.spring.io/spring-boot/3.3/reference/deployment/efficient.html#deployment.efficient.unpacking
 RUN <<EOF
+# The destination is automatically created
 java -Djarmode=tools -jar /app.jar  extract --destination /app --application-filename app.jar
 EOF
 
@@ -38,18 +39,17 @@ USER fruit
 # Shell Form (Under The hood -> /bin/sh -c)
 ## prevents any CMD
 ## the executable will not be the container's PID 1, and will not receive Unix signals.
-#ENTRYPOINT java "$JAVA_OPTS" -jar /app/app.jar
+## ENTRYPOINT java "$JAVA_OPTS" "$JAVA_OPTS_APPEND" -jar /app/app.jar
+## ENTRYPOINT [ "sh", "-c", "java -jar $JAVA_OPTS $JAVA_OPTS_APPEND /app/app.jar" ]
 
 # Exec Form
 ## the exec form doesn't automatically invoke a command shell
 ## This means that normal shell processing, such as variable substitution, doesn't happen
 
-#ENTRYPOINT ["java" , "-jar", "/app/app.jar"]
-
-#ENTRYPOINT [ "sh", "-c", "java -jar $JAVA_OPTS /app/app.jar" ]
+## ENTRYPOINT ["java" , "-jar", "/app/app.jar"]
 
 ## Remember to use "exec java …" to launch the java process (so that it can handle the KILL signals)
-### exec java "$JAVA_OPTS" -jar /app/app.jar
-#ENTRYPOINT ["run.sh"]
+## exec java "$JAVA_OPTS" "$JAVA_OPTS_APPEND" -jar /app/app.jar
+## ENTRYPOINT ["/app/run.sh"]
 
 ENTRYPOINT exec java $JAVA_OPTS $JAVA_OPTS_APPEND -jar /app/app.jar

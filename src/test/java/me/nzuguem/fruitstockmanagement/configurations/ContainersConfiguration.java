@@ -77,7 +77,7 @@ public class ContainersConfiguration {
     @Bean
     GenericContainer<?> mailpitContainer(DynamicPropertyRegistry propertyRegistry) {
 
-        var wireMockContainer = new GenericContainer<>("axllent/mailpit")
+        var mailpitContainer = new GenericContainer<>("axllent/mailpit")
                 .withNetwork(NETWORK)
                 .withNetworkAliases("mailpit")
                 .withExposedPorts(1025, 8025)
@@ -86,9 +86,9 @@ public class ContainersConfiguration {
                 .withEnv("MP_SMTP_AUTH_ALLOW_INSECURE", "1");
 
         propertyRegistry.add("spring.mail.host", () -> "localhost");
-        propertyRegistry.add("spring.mail.port", () -> wireMockContainer.getMappedPort(1025));
+        propertyRegistry.add("spring.mail.port", () -> mailpitContainer.getMappedPort(1025));
 
-        return wireMockContainer;
+        return mailpitContainer;
     }
 
     @Bean

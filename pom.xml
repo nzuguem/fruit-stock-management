@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.0-RC1</version>
+		<version>3.3.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>me.nzuguem</groupId>
@@ -167,22 +167,6 @@
 			<plugin>
 				<groupId>org.cyclonedx</groupId>
             	<artifactId>cyclonedx-maven-plugin</artifactId>
-				<configuration>
-					<projectType>application</projectType>
-					<schemaVersion>1.5</schemaVersion>
-					<includeBomSerialNumber>true</includeBomSerialNumber>
-					<includeCompileScope>true</includeCompileScope>
-					<includeProvidedScope>true</includeProvidedScope>
-					<includeRuntimeScope>true</includeRuntimeScope>
-					<includeSystemScope>true</includeSystemScope>
-					<includeTestScope>true</includeTestScope>
-					<includeLicenseText>true</includeLicenseText>
-					<outputReactorProjects>true</outputReactorProjects>
-					<outputFormat>json</outputFormat>
-					<outputName>sbom</outputName>
-					<outputDirectory>${project.build.directory}</outputDirectory>
-					<verbose>false</verbose>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
