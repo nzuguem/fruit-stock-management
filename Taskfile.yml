@@ -179,3 +179,14 @@ tasks:
         -F "projectVersion=local"
         -F "bom=@target/classes/META-INF/sbom/application.cdx.json"
 
+  sonar-scanner-analysis:
+    desc: Analyse Project
+    vars:
+      SONAR_TOKEN: squ_6b4468de89067a9d92e855299558ac97dd318ab2
+      SONAR_HOST_URL: "http://localhost:9000"
+    cmd: >-
+      docker run --net host --rm -i \
+              -v ./:/usr/src -v ./.sonar-cache:/opt/sonar-scanner/.sonar/cache \
+              -e SONAR_TOKEN={{.SONAR_TOKEN}} -e SONAR_HOST_URL={{.SONAR_HOST_URL}} \
+              sonarsource/sonar-scanner-cli
+

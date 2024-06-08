@@ -1,6 +1,7 @@
 name: Fruit Stock Management
 
 on:
+  workflow_dispatch: # Manual Trigger GitHub Workflows
   push:
     branches:
       - main

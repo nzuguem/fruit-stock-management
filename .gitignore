@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 microcks/data
 .trivycache
+.sonar-cache
 sbom.json
 .DS_Store
 
