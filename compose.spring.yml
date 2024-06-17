@@ -1,5 +1,5 @@
 include:
   - path: dependencies/compose.postgresql.yml
   - path: dependencies/compose.kafka.yml
-  - path: dependencies/compose.code-provider.yml
+  - path: dependencies/wiremock/compose.code-provider.yml
   - path: dependencies/compose.mailpit.yml

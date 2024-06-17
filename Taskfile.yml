@@ -32,9 +32,22 @@ tasks:
     desc: Launch application in Compose.
     deps:
       - task: build-app
+      - task: build-docker-otel-lgtm
     cmds: 
       - docker compose up -d --build --wait
   
+  build-docker-otel-lgtm:
+    desc: Build Docker of Dev Version of Grafana OTel LGTM.
+    internal: true
+    cmd: >-
+      docker buildx build
+      -t grafana/otel-lgtm:dev
+      docker-otel-lgtm/docker
+
+  update-docker-otel-lgtm:
+    desc: Update Submodule "docker-otel-lgtm".
+    cmd: git submodule update --remote --merge
+
   log-compose-services:
     desc: Show logs of all Compose Services.
     cmd: docker compose logs -f

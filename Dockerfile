@@ -20,7 +20,7 @@ ENV JAVA_OPTS="--enable-preview -javaagent:/app/otel-agent.jar"
 
 WORKDIR /app
 
-ARG OTEL_AGENT_VERSION=1.33.2
+ARG OTEL_AGENT_VERSION=2.1.0
 
 ADD --chmod=777 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${OTEL_AGENT_VERSION}/opentelemetry-javaagent.jar ./otel-agent.jar
 

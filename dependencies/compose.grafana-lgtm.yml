@@ -1,0 +1,8 @@
+services:
+  grafana-lgtm:
+    image: grafana/otel-lgtm:dev
+    container_name: grafana-lgtm
+    ports:
+      - 3000:3000 # Grafana
+      # - 4343:4317 # OTLP gRPC receiver
+      # - 4318:4318 # OTLP http receiver

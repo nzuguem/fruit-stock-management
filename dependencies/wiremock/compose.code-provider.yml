@@ -9,5 +9,5 @@ services:
       - --verbose
       - --disable-banner
     volumes:
-      - ./wiremock/stubs:/home/wiremock/__files
-      - ./wiremock/mappings:/home/wiremock/mappings
+      - ./stubs:/home/wiremock/__files
+      - ./mappings:/home/wiremock/mappings

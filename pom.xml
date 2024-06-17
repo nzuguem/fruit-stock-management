@@ -40,7 +40,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-
+		<!-- Spring Boot Startup Report: https://github.com/maciejwalkowiak/spring-boot-startup-report-->
+		<!-- After Start Application, please visit http://localhost:8080/startup-report -->
+		<dependency>
+			<groupId>com.maciejwalkowiak.spring</groupId>
+			<artifactId>spring-boot-startup-report</artifactId>
+			<version>0.2.0</version>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -113,17 +120,27 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		<!-- Metrics displayed by Micrometer in Prometheus format -->
+		<!-- Core module of Micrometer containing instrumentation API and implementation
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-core</artifactId>
+		</dependency>
+		-->
+		<!-- Metrics displayed by Micrometer in Prometheus format
+		Use Opentelemetry Agent Instead
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
-		<!-- Metrics sent to a storage backend that supports the OTLP protocol, or sent to OTEL Col -->
+		-->
+		<!-- Metrics sent to a storage backend that supports the OTLP protocol, or sent to OTEL Col
+		Use Opentelemetry Agent Instead
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-otlp</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		-->
 	</dependencies>
 
 	<build>
