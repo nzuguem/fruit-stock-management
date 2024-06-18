@@ -6,7 +6,7 @@ target/
 microcks/data
 .trivycache
 .sonar-cache
-.docker-otel-lgtm
+otel-agent.jar
 sbom.json
 .DS_Store
 

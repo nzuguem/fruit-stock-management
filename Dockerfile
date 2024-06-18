@@ -16,13 +16,8 @@ EOF
 FROM eclipse-temurin:22-jre-jammy
 
 ENV JAVA_OPTS_APPEND=""
-ENV JAVA_OPTS="--enable-preview -javaagent:/app/otel-agent.jar"
 
 WORKDIR /app
-
-ARG OTEL_AGENT_VERSION=2.1.0
-
-ADD --chmod=777 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${OTEL_AGENT_VERSION}/opentelemetry-javaagent.jar ./otel-agent.jar
 
 RUN <<EOF
 set -e
@@ -52,4 +47,4 @@ USER fruit
 ## exec java "$JAVA_OPTS" "$JAVA_OPTS_APPEND" -jar /app/app.jar
 ## ENTRYPOINT ["/app/run.sh"]
 
-ENTRYPOINT exec java $JAVA_OPTS $JAVA_OPTS_APPEND -jar /app/app.jar
+ENTRYPOINT exec java --enable-preview $JAVA_OPTS_APPEND -jar /app/app.jar

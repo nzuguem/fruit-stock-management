@@ -14,6 +14,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8080:8080
+    volumes:
+      - ./otel-agent.jar:/app/otel-agent.jar
     environment:
       # JDBC Datasource
       SPRING_DATASOURCE_URL: jdbc:postgresql://stock-db:5432/stock
@@ -35,8 +37,14 @@ services:
       # See https://github.com/open-telemetry/opentelemetry-java-instrumentation/blob/main/docs/logger-mdc-instrumentation.md
       # LOGGING_PATTERN_LEVEL: trace_id=%X{trace_id} span_id=%X{span_id} trace_flags=%X{trace_flags} %5p
 
-      # OpenTelemetry Agent Configuration
+      # OpenTelemetry Configuration
+      ## SDK Config : https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc # Default Value
       OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana-lgtm:4317 # Default Value
       OTEL_METRIC_EXPORT_INTERVAL: 500  # so we don't have to wait 60s for metrics
       OTEL_RESOURCE_ATTRIBUTES: "service.name=fruit-stock-management,service.instance.id=localhost:8080"
+      ## Agent Config : https://opentelemetry.io/docs/zero-code/java/agent/configuration/
+      OTEL_JAVAAGENT_LOGGING: application
+      OTEL_INSTRUMENTATION_MESSAGING_EXPERIMENTAL_RECEIVE_TELEMETRY_ENABLED: "true"
+      ## Server Config : https://opentelemetry.io/docs/zero-code/java/agent/server-config/
+      JAVA_OPTS_APPEND: "-javaagent:/app/otel-agent.jar"

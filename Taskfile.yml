@@ -33,8 +33,8 @@ tasks:
     deps:
       - task: build-app
       - task: build-docker-otel-lgtm
-    cmds: 
-      - docker compose up -d --build --wait
+      - task: download-otel-agent
+    cmd: docker compose up -d --build --wait
   
   build-docker-otel-lgtm:
     desc: Build Docker of Dev Version of Grafana OTel LGTM.
@@ -43,6 +43,14 @@ tasks:
       docker buildx build
       -t grafana/otel-lgtm:dev
       docker-otel-lgtm/docker
+
+  download-otel-agent:
+    desc: Download OTel Agent Java Instrumentation.
+    internal: true
+    cmd: >-
+      curl -sL
+      https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
+      -o otel-agent.jar
 
   update-docker-otel-lgtm:
     desc: Update Submodule "docker-otel-lgtm".
